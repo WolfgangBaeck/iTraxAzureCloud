@@ -10,7 +10,7 @@ terraform {
     resource_group_name  = "rg-tfstate" 
     storage_account_name = "stohopeandhometfstates" 
     container_name       = "cont-hah-tfstate" 
-    key                  = "terraform.tfstate"
+    key                  = "hah"
     subscription_id      = "c056d029-5e26-4859-b02c-35e4714819c7"
   }
 
