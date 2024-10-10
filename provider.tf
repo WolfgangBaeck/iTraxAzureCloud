@@ -7,12 +7,11 @@ terraform {
     # storage_account_name = "#{SAN}#" 
     # container_name       = "#{CN}#" 
     # subscription_id      = "#{SUB}#"
-  backend "azurerm" {
-    resource_group_name   = "rg-tfstate"
-    storage_account_name  = "stohopeandhometfstates"
-    container_name        = "cont-hah-tfstate"
-    key                   = "terraform.tfstate"
-  }
+    resource_group_name  = "rg-tfstate" 
+    storage_account_name = "stohopeandhometfstates" 
+    container_name       = "cont-hah-tfstate" 
+    key                  = "terraform.tfstate"
+    subscription_id      = "c056d029-5e26-4859-b02c-35e4714819c7"
   }
 
   required_providers {
