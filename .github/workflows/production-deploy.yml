@@ -59,6 +59,10 @@ jobs:
       run: |
         terraform --version
 
+    - name: show files
+      run: |
+        ls -la
+
     - name: Terraform Init, Validate, Plan & Apply
       env:
         TF_VAR_client_id: "${{ secrets.ARM_CLIENT_ID }}"
