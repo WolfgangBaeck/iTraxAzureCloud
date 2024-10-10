@@ -37,6 +37,7 @@ jobs:
         SAN: ${{ vars.STORAGE_ACCOUNT_NAME }}
         CN:  ${{ vars.CONTAINER_NAME }}
         SUB: ${{ vars.TFSTATE_SUBSCRIPTION_ID }}
+        key: ${{ vars.KEY }}
 
     - name: Checkout Cloud Setup
       uses: actions/checkout@v3
