@@ -52,13 +52,13 @@ jobs:
       run: |
         terraform --version
 
-    - name: show files
-      run: |
-        ls -la
+    # - name: show files
+    #   run: |
+    #     ls -la
 
-    - name: show provider content
-      run: |
-        cat ./provider.tf
+    # - name: show provider content
+    #   run: |
+    #     cat ./provider.tf
 
     - name: Terraform Init, Validate, Plan & Apply
       env:
