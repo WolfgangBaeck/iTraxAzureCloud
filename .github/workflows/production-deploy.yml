@@ -37,7 +37,7 @@ jobs:
         SAN: ${{ vars.TF_STORAGE_ACCOUNT_NAME }}
         CN:  ${{ vars.TF_CONTAINER_NAME }}
         SUB: ${{ vars.TF_SUBSCRIPTION_ID }}
-        key: ${{ vars.TF_KEY_NAME }}
+        KEY: ${{ vars.TF_KEY_NAME }}
 
     - name: Terraform Setup
       uses: hashicorp/setup-terraform@v2
