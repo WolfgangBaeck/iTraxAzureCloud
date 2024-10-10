@@ -34,17 +34,10 @@ jobs:
         files: '["./provider.tf"]'
       env:
         RGN: ${{ vars.RESOURCE_GROUP_NAME }}
-        SAN: ${{ vars.STORAGE_ACCOUNT_NAME }}
-        CN:  ${{ vars.CONTAINER_NAME }}
-        SUB: ${{ vars.TFSTATE_SUBSCRIPTION_ID }}
-        key: ${{ vars.KEY }}
-
-    # - name: Checkout Cloud Setup
-    #   uses: actions/checkout@v3
-    #   with:
-    #     repository: WolfgangBaeck/iTraxAzureCloud 
-    #     path: './iTraxAzureCloud'
-    #     ref: '${{ github.ref_name }}'
+        SAN: ${{ vars.TF_STORAGE_ACCOUNT_NAME }}
+        CN:  ${{ vars.TF_CONTAINER_NAME }}
+        SUB: ${{ vars.TF_SUBSCRIPTION_ID }}
+        key: ${{ vars.TF_KEY_NAME }}
 
     - name: Terraform Setup
       uses: hashicorp/setup-terraform@v2
