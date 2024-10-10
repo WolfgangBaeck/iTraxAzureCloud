@@ -1,0 +1,69 @@
+
+name: 'iTrax production deploy'
+
+on: 
+  push:
+    branches:
+      - 'production'
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  terraform:
+    name: 'Stack update...'
+    environment: PRODUCTION
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout Client
+      uses: actions/checkout@v3    
+
+    - name: Replace Secrets
+      uses: cschleiden/replace-tokens@v1
+      with:
+        files: '["**/provider.tf"]'
+      env:
+        RGN: ${{ vars.RESOURCE_GROUP_NAME }}
+        SAN: ${{ vars.STORAGE_ACCOUNT_NAME }}
+        CN:  ${{ vars.CONTAINER_NAME }}
+        SUB: ${{ vars.TFSTATE_SUBSCRIPTION_ID }}
+
+    - name: Checkout Cloud Setup
+      uses: actions/checkout@v3
+      with:
+        repository: WolfgangBaeck/iTraxAzureCloud 
+        path: './iTraxAzureCloud'
+        ref: '${{ github.ref_name }}'
+
+    - name: Terraform Setup
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.7
+
+    - name: Check AZ CLI
+      run: |
+        az --version
+        
+    - name: Check TF --version
+      run: |
+        terraform --version
+
+    - name: Terraform Init, Validate, Plan & Apply
+      env:
+        TF_VAR_client_id: "${{ secrets.ARM_CLIENT_ID }}"
+        TF_VAR_client_secret: "${{ secrets.ARM_CLIENT_SECRET }}"      
+      run: |
+        terraform init
+        terraform validate -no-color
+        terraform plan -refresh=true -lock-timeout=5m -out=tfplan -no-color 
+        terraform apply -auto-approve  -lock-timeout=5m -no-color tfplan
