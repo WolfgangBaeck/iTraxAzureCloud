@@ -31,7 +31,7 @@ jobs:
     - name: Replace Secrets
       uses: cschleiden/replace-tokens@v1
       with:
-        files: '["**/provider.tf"]'
+        files: '["./provider.tf"]'
       env:
         RGN: ${{ vars.RESOURCE_GROUP_NAME }}
         SAN: ${{ vars.STORAGE_ACCOUNT_NAME }}
@@ -39,12 +39,12 @@ jobs:
         SUB: ${{ vars.TFSTATE_SUBSCRIPTION_ID }}
         key: ${{ vars.KEY }}
 
-    - name: Checkout Cloud Setup
-      uses: actions/checkout@v3
-      with:
-        repository: WolfgangBaeck/iTraxAzureCloud 
-        path: './iTraxAzureCloud'
-        ref: '${{ github.ref_name }}'
+    # - name: Checkout Cloud Setup
+    #   uses: actions/checkout@v3
+    #   with:
+    #     repository: WolfgangBaeck/iTraxAzureCloud 
+    #     path: './iTraxAzureCloud'
+    #     ref: '${{ github.ref_name }}'
 
     - name: Terraform Setup
       uses: hashicorp/setup-terraform@v2
