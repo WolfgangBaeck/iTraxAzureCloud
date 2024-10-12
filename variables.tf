@@ -34,6 +34,7 @@ variable "SFTP" {
         {
           name           = "Wolfgang"
           home_directory = "Reports/data"
+          ssh_key_enabled = true
           permissions_scopes = [
             {
               target_container = "Reports"
