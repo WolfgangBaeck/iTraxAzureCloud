@@ -3,7 +3,7 @@ variable "client_name" {
     default = "hah"
 }
 
-variable "sftp" {
+variable "SFTP" {
     type = map(object({
       containers = list(object({
         name                  = string

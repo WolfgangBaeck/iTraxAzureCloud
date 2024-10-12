@@ -96,7 +96,7 @@ module "keyvault" {
 
 module "storage-sftp" {
   source         = "./storage-sftp"
-  SFTP           = var.sftp
+  SFTP           = var.SFTP
   client_name    = var.client_name
   resource_group = azurerm_resource_group.prod_rg
   keyvault_id    = module.keyvault.keyvault_id
