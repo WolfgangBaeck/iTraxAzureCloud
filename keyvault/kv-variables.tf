@@ -21,3 +21,6 @@ variable "contributors" {
   type        = list(string)
   description = "default contributors for keyvault"
 }
+variable "contributor" {
+  type = any
+}

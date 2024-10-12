@@ -92,6 +92,7 @@ module "keyvault" {
   client_name    = var.client_name
   readers        = local.readers
   contributors   = local.contributors
+  contributor = data.azuread_user.wolfgang_baeck.object_id
 }
 
 module "storage-sftp" {

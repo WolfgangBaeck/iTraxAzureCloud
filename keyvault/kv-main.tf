@@ -38,7 +38,8 @@ resource "azurerm_key_vault_access_policy" "contributor_policy" {
   key_vault_id = azurerm_key_vault.default_keyvault.id
 
   tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = azuread_group.grp_contributors.id
+ # object_id = azuread_group.grp_contributors.id
+  object_id = var.contributor
 
   key_permissions = [
     "Create", "Decrypt", "Encrypt", "Get", "List", "Update", "Verify", "Rotate", "GetRotationPolicy", "SetRotationPolicy"
@@ -51,22 +52,22 @@ resource "azurerm_key_vault_access_policy" "contributor_policy" {
   ]
 }
 
-resource "azurerm_key_vault_access_policy" "reader_policy" {
-  key_vault_id = azurerm_key_vault.default_keyvault.id
+# resource "azurerm_key_vault_access_policy" "reader_policy" {
+#   key_vault_id = azurerm_key_vault.default_keyvault.id
 
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = azuread_group.grp_readers.id
+#   tenant_id = data.azurerm_client_config.current.tenant_id
+#   object_id = azuread_group.grp_readers.id
 
-  key_permissions = [
-    "Get", "List", "GetRotationPolicy", "WrapKey", "UnwrapKey"
-  ]
-  secret_permissions = [
-    "Get", "List",
-  ]
-  storage_permissions = [
-    "Get", "GetSAS", "List", "ListSAS"
-  ]
-}
+#   key_permissions = [
+#     "Get", "List", "GetRotationPolicy", "WrapKey", "UnwrapKey"
+#   ]
+#   secret_permissions = [
+#     "Get", "List",
+#   ]
+#   storage_permissions = [
+#     "Get", "GetSAS", "List", "ListSAS"
+#   ]
+# }
 
 # resource "azuread_group" "grp_readers" {
 #   display_name     = "readers-kv-grp-${var.client_name}-${var.resource_group.location}"
