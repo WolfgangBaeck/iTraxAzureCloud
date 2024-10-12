@@ -75,7 +75,7 @@ resource "azurerm_windows_web_app" "web_app" {
   }
 
     lifecycle {
-    ignore_changes = [site_config.application_stack]
+    ignore_changes = [site_config[0].application_stack]
   }
 }
 
