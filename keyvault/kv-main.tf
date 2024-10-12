@@ -68,16 +68,16 @@ resource "azurerm_key_vault_access_policy" "reader_policy" {
   ]
 }
 
-resource "azuread_group" "grp_readers" {
-  display_name     = "readers-kv-grp-${var.client_name}-${var.resource_group.location}"
-  owners           = [data.azurerm_client_config.current.object_id]
-  security_enabled = true
-  members          = var.readers
-}
+# resource "azuread_group" "grp_readers" {
+#   display_name     = "readers-kv-grp-${var.client_name}-${var.resource_group.location}"
+#   owners           = [data.azurerm_client_config.current.object_id]
+#   security_enabled = true
+#   members          = var.readers
+# }
 
-resource "azuread_group" "grp_contributors" {
-  display_name     = "contr-kv-grp-${var.client_name}-${var.resource_group.location}"
-  owners           = [data.azurerm_client_config.current.object_id]
-  security_enabled = true
-  members          = var.contributors
-}
+# resource "azuread_group" "grp_contributors" {
+#   display_name     = "contr-kv-grp-${var.client_name}-${var.resource_group.location}"
+#   owners           = [data.azurerm_client_config.current.object_id]
+#   security_enabled = true
+#   members          = var.contributors
+# }
