@@ -8,7 +8,7 @@
       users = [
         {
           name           = "Wolfgang"
-          home_directory = "reports/data"
+          home_directory = "reports"
           permissions_scopes = [
             {
               target_container = "reports"
