@@ -1,7 +1,15 @@
 data "azurerm_client_config" "current" {}
 
-data "azuread_group" "sqlserveradmin" {
-  display_name = "iTrax - SQL Admins"
+data "azuread_user" "wolfgang_baeck" {
+  user_principal_name = "Wolfgang@hopeAndhome.com"
+}
+
+locals {
+  readers = [
+  ]
+  contributors = [
+    data.azuread_user.wolfgang_baeck.object_id
+  ]
 }
 
 resource "azurerm_resource_group" "prod_rg" {
@@ -65,5 +73,32 @@ resource "azurerm_windows_web_app" "web_app" {
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE" = "1"
   }
+
+    lifecycle {
+    ignore_changes = [site_config.application_stack]
+  }
 }
 
+resource "random_string" "random_s4" {
+  length  = 4
+  special = false
+  upper   = false
+}
+
+module "keyvault" {
+  source         = "./keyvault"
+  resource_group = azurerm_resource_group.prod_rg
+  location       = azurerm_resource_group.prod_rg.location
+  client_name    = var.client_name
+  readers        = local.readers
+  contributors   = local.contributors
+}
+
+module "storage-sftp" {
+  source         = "./storage-sftp"
+  SFTP           = var.sftp
+  client_name    = var.client_name
+  resource_group = azurerm_resource_group.prod_rg
+  keyvault_id    = module.keyvault.keyvault_id
+  random_s4      = random_string.random_s4.result
+}
