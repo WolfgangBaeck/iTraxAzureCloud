@@ -1,7 +1,7 @@
 data "azurerm_client_config" "current" {}
 
 data "azuread_user" "wolfgang_baeck" {
-  user_principal_name = "Wolfgang@hopeAndhome.com"
+  user_principal_name = "Wolfgang@hopeandhome.org"
 }
 
 locals {
