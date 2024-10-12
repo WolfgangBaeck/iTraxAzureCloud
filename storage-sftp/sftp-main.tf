@@ -34,9 +34,9 @@ resource "azurerm_storage_account" "sftppub" {
       days = 30
     }
   }
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
+  lifecycle {
+    prevent_destroy = true
+  }
 
 }
 
