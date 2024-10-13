@@ -62,7 +62,7 @@ resource "azurerm_windows_web_app" "web_app" {
 
   site_config {
     application_stack {
-      current_stack  = "dotnet"
+      current_stack  = "dotnetcore"
       dotnet_version = "v8.0"
     }
     use_32_bit_worker = false
@@ -74,9 +74,9 @@ resource "azurerm_windows_web_app" "web_app" {
     "WEBSITE_RUN_FROM_PACKAGE" = "1"
   }
 
-    lifecycle {
-    ignore_changes = [site_config[0].application_stack]
-  }
+  #   lifecycle {
+  #   ignore_changes = [site_config[0].application_stack]
+  # }
 }
 
 resource "random_string" "random_s4" {
