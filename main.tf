@@ -70,10 +70,6 @@ resource "azurerm_windows_web_app" "web_app" {
     websockets_enabled = true
   }
 
-  app_settings = {
-    "WEBSITE_RUN_FROM_PACKAGE" = "1"
-  }
-
   #   lifecycle {
   #   ignore_changes = [site_config[0].application_stack]
   # }
