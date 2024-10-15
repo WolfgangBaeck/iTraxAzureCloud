@@ -4,6 +4,14 @@ data "azuread_group" "sqlserveradmin" {
   display_name = "iTrax - SQL Admins"
 }
 
+locals {
+  readers = [
+  ]
+  contributors = [
+    data.azuread_user.wolfgang_baeck.object_id
+  ]
+}
+
 resource "azurerm_resource_group" "prod_rg" {
   name     = "iTraxBlazerProd_RG"
   location = "East US 2"
@@ -34,7 +42,21 @@ resource "azurerm_mssql_database" "sql_db" {
   max_size_gb  = 400                            # Specify database size
   sku_name     = "GP_Gen5_2"                    # Database SKU (e.g., S0, S1, etc.)
   enclave_type = "VBS"                          # Optional enclave setting
+
+    # Short-term backup retention for PITR
+  short_term_retention_policy {
+    retention_days = 7 # Customize the number of days (e.g., 7, 14, 35 days)
+  }
 }
+
+resource "azurerm_mssql_database_long_term_retention_policy" "ltr_policy" {
+  database_id = azurerm_mssql_database.sql_db.id
+
+  weekly_retention  = "P2W"   
+  monthly_retention = "P2M"   # Retain monthly backups for 2 years
+  week_of_year      = 1       # Which week of the year to take yearly backup
+}
+
 
 # Service Plan
 resource "azurerm_service_plan" "service_plan" {
@@ -78,8 +100,8 @@ module "keyvault" {
   resource_group = azurerm_resource_group.prod_rg
   location       = azurerm_resource_group.prod_rg.location
   client_name    = var.client_name
-  readers        = []
-  contributors   = []
+  readers        = local.readers
+  contributors   = local.contributors
   contributor     = data.azuread_group.sqlserveradmin.object_id
 }
 
