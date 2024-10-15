@@ -8,7 +8,7 @@ locals {
   readers = [
   ]
   contributors = [
-    data.azuread_user.wolfgang_baeck.object_id
+    data.azuread_group.sqlserveradmin.object_id
   ]
 }
 
