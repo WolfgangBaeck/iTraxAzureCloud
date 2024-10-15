@@ -49,14 +49,6 @@ resource "azurerm_mssql_database" "sql_db" {
   }
 }
 
-resource "azurerm_mssql_database_long_term_retention_policy" "ltr_policy" {
-  database_id = azurerm_mssql_database.sql_db.id
-
-  weekly_retention  = "P2W"   
-  monthly_retention = "P2M"   # Retain monthly backups for 2 years
-  week_of_year      = 1       # Which week of the year to take yearly backup
-}
-
 
 # Service Plan
 resource "azurerm_service_plan" "service_plan" {
