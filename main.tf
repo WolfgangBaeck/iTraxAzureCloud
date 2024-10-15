@@ -1,15 +1,7 @@
 data "azurerm_client_config" "current" {}
 
-data "azuread_user" "wolfgang_baeck" {
-  user_principal_name = "Wolfgang@hopeandhome.org"
-}
-
-locals {
-  readers = [
-  ]
-  contributors = [
-    data.azuread_user.wolfgang_baeck.object_id
-  ]
+data "azuread_group" "sqlserveradmin" {
+  display_name = "iTrax - SQL Admins"
 }
 
 resource "azurerm_resource_group" "prod_rg" {
@@ -86,8 +78,8 @@ module "keyvault" {
   resource_group = azurerm_resource_group.prod_rg
   location       = azurerm_resource_group.prod_rg.location
   client_name    = var.client_name
-  readers        = local.readers
-  contributors   = local.contributors
+  readers        = []
+  contributors   = []
   contributor = data.azuread_user.wolfgang_baeck.object_id
 }
 
