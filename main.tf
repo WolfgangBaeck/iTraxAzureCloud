@@ -80,7 +80,7 @@ module "keyvault" {
   client_name    = var.client_name
   readers        = []
   contributors   = []
-  contributor = data.azuread_user.wolfgang_baeck.object_id
+  contributor     = data.azuread_group.sqlserveradmin.object_id
 }
 
 module "storage-sftp" {
