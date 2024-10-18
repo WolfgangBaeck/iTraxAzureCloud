@@ -47,6 +47,10 @@ resource "azurerm_mssql_database" "sql_db" {
   short_term_retention_policy {
     retention_days = 7 # Customize the number of days (e.g., 7, 14, 35 days)
   }
+    # prevent the possibility of accidental data loss
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 
