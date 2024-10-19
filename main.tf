@@ -53,6 +53,25 @@ resource "azurerm_mssql_database" "sql_db" {
   }
 }
 
+# Azure App Service with Managed Identity
+resource "azurerm_app_service" "itrax_app" {
+  name                = "${var.client_name}-itrax-app"
+  resource_group_name = azurerm_resource_group.prod_rg.name
+  location            = azurerm_resource_group.prod_rg.location
+  app_service_plan_id = azurerm_service_plan.service_plan.id
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+}
+
+# Assign Managed Identity SQL DB Role
+resource "azurerm_role_assignment" "sql_contributor" {
+  principal_id         = azurerm_app_service.itrax_app.identity.principal_id
+  role_definition_name = "SQL DB Contributor"
+  scope                = azurerm_mssql_server.azuresqlserver.id
+}
 
 # Service Plan
 resource "azurerm_service_plan" "service_plan" {
