@@ -26,7 +26,7 @@ resource "azurerm_mssql_server" "azuresqlserver" {
   minimum_tls_version = "1.2"
 
   administrator_login          = "wolfgang"      # SQL Admin Username
-  administrator_login_password = "gnag8168flow!" # SQL Admin Password
+  administrator_login_password = "gxxxxx!" # SQL Admin Password
 
   azuread_administrator {
     login_username              = data.azuread_group.sqlserveradmin.display_name
@@ -59,21 +59,21 @@ resource "azurerm_mssql_database" "sql_db" {
 
 
 # Azure App Service with Managed Identity
-resource "azurerm_app_service" "itrax_app" {
-  name                = "${var.client_name}-itrax-app"
-  resource_group_name = azurerm_resource_group.prod_rg.name
-  location            = azurerm_resource_group.prod_rg.location
-  app_service_plan_id = azurerm_service_plan.service_plan.id
+# resource "azurerm_app_service" "itrax_app" {
+#   name                = "${var.client_name}-itrax-app"
+#   resource_group_name = azurerm_resource_group.prod_rg.name
+#   location            = azurerm_resource_group.prod_rg.location
+#   app_service_plan_id = azurerm_service_plan.service_plan.id
 
-  identity {
-    type = "SystemAssigned"
-  }
+#   identity {
+#     type = "SystemAssigned"
+#   }
 
-}
+# }
 
 # Assign Managed Identity SQL DB Role
 resource "azurerm_role_assignment" "sql_contributor" {
-  principal_id         = azurerm_app_service.itrax_app.identity[0].principal_id
+  principal_id         = azurerm_windows_web_app.web_app.identity[0].principal_id
   role_definition_name = "SQL DB Contributor"
   scope                = azurerm_mssql_server.azuresqlserver.id
 }
@@ -105,9 +105,9 @@ resource "azurerm_windows_web_app" "web_app" {
     websockets_enabled = true
   }
 
-  #   lifecycle {
-  #   ignore_changes = [site_config[0].application_stack]
-  # }
+  identity {
+    type = "SystemAssigned"
+  }
 }
 
 resource "random_string" "random_s4" {
