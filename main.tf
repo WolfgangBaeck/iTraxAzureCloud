@@ -72,12 +72,12 @@ resource "azurerm_mssql_database" "sql_db" {
 # }
 
 # Assign Managed Identity SQL DB Role
-resource "azurerm_role_assignment" "sql_contributor" {
-  depends_on = [azurerm_windows_web_app.web_app]
-  principal_id         = azurerm_windows_web_app.web_app.identity[0].principal_id
-  role_definition_name = "SQL DB Contributor"
-  scope                = azurerm_mssql_server.azuresqlserver.id
-}
+# resource "azurerm_role_assignment" "sql_contributor" {
+#   depends_on = [azurerm_windows_web_app.web_app]
+#   principal_id         = azurerm_windows_web_app.web_app.identity[0].principal_id
+#   role_definition_name = "SQL DB Contributor"
+#   scope                = azurerm_mssql_server.azuresqlserver.id
+# }
 
 
 # Service Plan
@@ -90,26 +90,26 @@ resource "azurerm_service_plan" "service_plan" {
 }
 
 # Windows Web App
-resource "azurerm_windows_web_app" "web_app" {
-  name                = "${var.client_name}-service"
-  location            = azurerm_resource_group.prod_rg.location
-  resource_group_name = azurerm_resource_group.prod_rg.name
-  service_plan_id     = azurerm_service_plan.service_plan.id
+# resource "azurerm_windows_web_app" "web_app" {
+#   name                = "${var.client_name}-service"
+#   location            = azurerm_resource_group.prod_rg.location
+#   resource_group_name = azurerm_resource_group.prod_rg.name
+#   service_plan_id     = azurerm_service_plan.service_plan.id
 
-  site_config {
-    application_stack {
-      current_stack  = "dotnetcore"
-      dotnet_version = "v8.0"
-    }
-    use_32_bit_worker = false
-    http2_enabled = true
-    websockets_enabled = true
-  }
+#   site_config {
+#     application_stack {
+#       current_stack  = "dotnetcore"
+#       dotnet_version = "v8.0"
+#     }
+#     use_32_bit_worker = false
+#     http2_enabled = true
+#     websockets_enabled = true
+#   }
 
-  identity {
-    type = "SystemAssigned"
-  }
-}
+#   identity {
+#     type = "SystemAssigned"
+#   }
+# }
 
 resource "random_string" "random_s4" {
   length  = 4
