@@ -26,7 +26,7 @@ resource "azurerm_mssql_server" "azuresqlserver" {
   minimum_tls_version = "1.2"
 
   administrator_login          = "wolfgang"      # SQL Admin Username
-  administrator_login_password = "gxxxxx!" # SQL Admin Password
+  administrator_login_password = "gnag8168flow!" # SQL Admin Password
 
   azuread_administrator {
     login_username              = data.azuread_group.sqlserveradmin.display_name
