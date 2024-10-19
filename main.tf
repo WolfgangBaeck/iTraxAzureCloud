@@ -25,11 +25,14 @@ resource "azurerm_mssql_server" "azuresqlserver" {
   version             = "12.0"
   minimum_tls_version = "1.2"
 
+  administrator_login          = "wolfgang"      # SQL Admin Username
+  administrator_login_password = "gnag8168flow!" # SQL Admin Password
+
   azuread_administrator {
     login_username              = data.azuread_group.sqlserveradmin.display_name
     object_id                   = data.azuread_group.sqlserveradmin.object_id
     tenant_id                   = data.azurerm_client_config.current.tenant_id
-    azuread_authentication_only = true # Enforce Azure Entra-only authentication
+    #azuread_authentication_only = true # Enforce Azure Entra-only authentication
   }
 }
 
@@ -48,9 +51,9 @@ resource "azurerm_mssql_database" "sql_db" {
     retention_days = 7 # Customize the number of days (e.g., 7, 14, 35 days)
   }
     # prevent the possibility of accidental data loss
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
 
 # Azure App Service with Managed Identity
