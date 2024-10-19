@@ -11,7 +11,7 @@ resource "azurerm_key_vault" "default_keyvault" {
   sku_name                    = "standard"
 
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = true
   }
 }
 

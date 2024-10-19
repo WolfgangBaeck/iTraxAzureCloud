@@ -38,6 +38,7 @@ resource "azurerm_mssql_server" "azuresqlserver" {
 
 # SQL Database
 resource "azurerm_mssql_database" "sql_db" {
+  depends_on = [ azurerm_mssql_server.azuresqlserver ]
   name         = "iTraxBlazer_db"
   server_id    = azurerm_mssql_server.azuresqlserver.id
   collation    = "SQL_Latin1_General_CP1_CI_AS" # Specify the collation
@@ -51,9 +52,9 @@ resource "azurerm_mssql_database" "sql_db" {
     retention_days = 7 # Customize the number of days (e.g., 7, 14, 35 days)
   }
     # prevent the possibility of accidental data loss
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 /*
