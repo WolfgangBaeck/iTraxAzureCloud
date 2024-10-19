@@ -90,26 +90,26 @@ resource "azurerm_service_plan" "service_plan" {
 }
 
 # Windows Web App
-# resource "azurerm_windows_web_app" "web_app" {
-#   name                = "${var.client_name}-service"
-#   location            = azurerm_resource_group.prod_rg.location
-#   resource_group_name = azurerm_resource_group.prod_rg.name
-#   service_plan_id     = azurerm_service_plan.service_plan.id
+resource "azurerm_windows_web_app" "web_app" {
+  name                = "${var.client_name}-service"
+  location            = azurerm_resource_group.prod_rg.location
+  resource_group_name = azurerm_resource_group.prod_rg.name
+  service_plan_id     = azurerm_service_plan.service_plan.id
 
-#   site_config {
-#     application_stack {
-#       current_stack  = "dotnetcore"
-#       dotnet_version = "v8.0"
-#     }
-#     use_32_bit_worker = false
-#     http2_enabled = true
-#     websockets_enabled = true
-#   }
+  site_config {
+    application_stack {
+      current_stack  = "dotnetcore"
+      dotnet_version = "v8.0"
+    }
+    use_32_bit_worker = false
+    http2_enabled = true
+    websockets_enabled = true
+  }
 
-#   identity {
-#     type = "SystemAssigned"
-#   }
-# }
+  identity {
+    type = "SystemAssigned"
+  }
+}
 
 resource "random_string" "random_s4" {
   length  = 4
