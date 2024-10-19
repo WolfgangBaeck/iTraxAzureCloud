@@ -32,7 +32,7 @@ resource "azurerm_mssql_server" "azuresqlserver" {
     login_username              = data.azuread_group.sqlserveradmin.display_name
     object_id                   = data.azuread_group.sqlserveradmin.object_id
     tenant_id                   = data.azurerm_client_config.current.tenant_id
-    #azuread_authentication_only = true # Enforce Azure Entra-only authentication
+    azuread_authentication_only = false # Enforce Azure Entra-only authentication
   }
 }
 
@@ -57,7 +57,7 @@ resource "azurerm_mssql_database" "sql_db" {
   }
 }
 
-/*
+
 # Azure App Service with Managed Identity
 resource "azurerm_app_service" "itrax_app" {
   name                = "${var.client_name}-itrax-app"
@@ -77,7 +77,7 @@ resource "azurerm_role_assignment" "sql_contributor" {
   role_definition_name = "SQL DB Contributor"
   scope                = azurerm_mssql_server.azuresqlserver.id
 }
-*/
+
 
 # Service Plan
 resource "azurerm_service_plan" "service_plan" {
