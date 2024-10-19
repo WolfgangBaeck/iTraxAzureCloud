@@ -73,7 +73,8 @@ resource "azurerm_mssql_database" "sql_db" {
 
 # Assign Managed Identity SQL DB Role
 resource "azurerm_role_assignment" "sql_contributor" {
-  principal_id         = azurerm_windows_web_app.web_app.identity.principal_id
+  depends_on = [azurerm_windows_web_app.web_app]
+  principal_id         = azurerm_windows_web_app.web_app.identity[0].principal_id
   role_definition_name = "SQL DB Contributor"
   scope                = azurerm_mssql_server.azuresqlserver.id
 }
