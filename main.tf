@@ -32,7 +32,7 @@ resource "azurerm_mssql_server" "azuresqlserver" {
     login_username              = data.azuread_group.sqlserveradmin.display_name
     object_id                   = data.azuread_group.sqlserveradmin.object_id
     tenant_id                   = data.azurerm_client_config.current.tenant_id
-    azuread_authentication_only = true # Enforce Azure Entra-only authentication
+    #azuread_authentication_only = true # Enforce Azure Entra-only authentication
   }
 }
 
