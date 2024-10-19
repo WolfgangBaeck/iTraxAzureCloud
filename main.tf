@@ -68,7 +68,7 @@ resource "azurerm_app_service" "itrax_app" {
 
 # Assign Managed Identity SQL DB Role
 resource "azurerm_role_assignment" "sql_contributor" {
-  principal_id         = azurerm_app_service.itrax_app.identity.principal_id
+  principal_id         = azurerm_app_service.itrax_app.identity[0].principal_id
   role_definition_name = "SQL DB Contributor"
   scope                = azurerm_mssql_server.azuresqlserver.id
 }
