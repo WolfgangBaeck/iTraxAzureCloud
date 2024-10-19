@@ -1,5 +1,4 @@
-
-name: 'iTrax production deploy'
+name: 'iTrax production plan'
 
 on: 
   push:
@@ -68,4 +67,3 @@ jobs:
         terraform init
         terraform validate -no-color
         terraform plan -refresh=true -lock-timeout=5m -out=tfplan -no-color 
-        terraform apply -auto-approve  -lock-timeout=5m -no-color tfplan
