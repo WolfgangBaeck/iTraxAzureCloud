@@ -58,18 +58,6 @@ resource "azurerm_mssql_database" "sql_db" {
 }
 
 
-# Azure App Service with Managed Identity
-# resource "azurerm_app_service" "itrax_app" {
-#   name                = "${var.client_name}-itrax-app"
-#   resource_group_name = azurerm_resource_group.prod_rg.name
-#   location            = azurerm_resource_group.prod_rg.location
-#   app_service_plan_id = azurerm_service_plan.service_plan.id
-
-#   identity {
-#     type = "SystemAssigned"
-#   }
-
-# }
 
 # Assign Managed Identity SQL DB Role
 resource "azurerm_role_assignment" "sql_contributor" {
@@ -79,7 +67,29 @@ resource "azurerm_role_assignment" "sql_contributor" {
   scope                = azurerm_mssql_server.azuresqlserver.id
 }
 
+/*
+    Once you give the azurerm_windows_web_app.web_app a SQL DB Contributor role 
+    and assign that role to the database server, you need to make sure that the 
+    database server has a user created the following way:
 
+    CREATE USER [hah-service] FROM EXTERNAL PROVIDER;
+
+    -- Grant the user necessary permissions
+
+    ALTER ROLE db_datareader ADD MEMBER [hah-service];
+    ALTER ROLE db_datawriter ADD MEMBER [hah-service];
+    ALTER ROLE db_ddladmin ADD MEMBER [hah-service];
+
+    Verify the role assignment:
+    SELECT dp.name AS UserName,
+       dp.type_desc AS UserType,
+       r.name AS RoleName
+    FROM sys.database_principals dp
+    JOIN sys.database_role_members drm ON dp.principal_id = drm.member_principal_id
+    JOIN sys.database_principals r ON drm.role_principal_id = r.principal_id
+    WHERE dp.name = 'hah-service';
+    
+*/
 # Service Plan
 resource "azurerm_service_plan" "service_plan" {
   name                = "${var.client_name}-webserver-plan"
