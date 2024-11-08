@@ -121,6 +121,8 @@ resource "azurerm_windows_web_app" "web_app" {
   identity {
     type = "SystemAssigned"
   }
+
+  https_only = true
 }
 
 resource "random_string" "random_s4" {
