@@ -114,6 +114,8 @@ resource "azurerm_windows_web_app" "web_app" {
     use_32_bit_worker = false
     http2_enabled = true
     websockets_enabled = true
+    remote_debugging_enabled = true
+    minimum_tls_version = "1.3"
   }
 
   identity {
