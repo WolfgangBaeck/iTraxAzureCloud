@@ -52,7 +52,7 @@ resource "azurerm_storage_container" "sftpcontainer" {
     for idx, container in local.containers : idx => container
   }
   name                  = lower(each.value.cont_name)
-  storage_account_id    = azurerm_storage_account.sftppub.id
+  storage_account_id = azurerm_storage_account.sftppub[each.value.storage_name].id
   container_access_type = "blob"
 }
 
