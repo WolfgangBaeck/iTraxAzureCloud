@@ -34,7 +34,7 @@ resource "azurerm_storage_account" "logicapp_sa" {
 
 resource "azurerm_storage_share" "logicapp_content" {
   name                 = "${var.client_name}-logicapp-content"
-  storage_account_name = azurerm_storage_account.logicapp_sa.name
+  storage_account_id = azurerm_storage_account.logicapp_sa.id
   quota                = 100
 }
 
@@ -89,7 +89,7 @@ data "azurerm_managed_api" "sqldw" {
 
 resource "azurerm_api_connection" "sqldw" {
   name                = "sqldw"
-  resource_group_name = var.resource_group.Name
+  resource_group_name = var.resource_group.name
   managed_api_id      = data.azurerm_managed_api.sqldw.id
 
   # MSI authentication for the connector (matches connections.json)
