@@ -1,0 +1,175 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Get_list_to_be_notified": {
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "referenceName": "sqldw"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/procedures/@{encodeURIComponent(encodeURIComponent('[dbo].[ExpiringItemsEmailBodies_Blz]'))}"
+                },
+                "runAfter": {}
+            },
+            "Init_HadFailures": {
+                "type": "InitializeVariable",
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "HadFailures",
+                            "type": "Boolean",
+                            "value": false
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Get_list_to_be_notified": [
+                        "SUCCEEDED"
+                    ]
+                }
+            },
+            "For_each": {
+                "type": "Foreach",
+                "foreach": "@coalesce(body('Get_list_to_be_notified')?['resultsets']?['Table1'], array())",
+                "actions": {
+                    "Preview_Current_Item": {
+                        "type": "Compose",
+                        "inputs": {
+                            "Recipient": "@{replace(trim(string(coalesce(item()?['Recipient'], ''))), ' ', '')}",
+                            "BCCRecipient": "@{replace(trim(string(coalesce(item()?['BCCRecipient'], ''))), ' ', '')}",
+                            "Subject": "@{string(coalesce(item()?['MailSubject'], ''))}",
+                            "BodyPreview": "@{if(equals(length(string(coalesce(item()?['MessageEntry'], ''))), 0, ''), '', if(greater(length(string(coalesce(item()?['MessageEntry'], ''))), 80), substring(string(coalesce(item()?['MessageEntry'], '')), 0, 80), string(coalesce(item()?['MessageEntry'], ''))))}"
+                        }
+                    },
+                    "Try_Send": {
+                        "type": "Scope",
+                        "actions": {
+                            "Send_Notification_": {
+                                "type": "ServiceProvider",
+                                "inputs": {
+                                    "parameters": {
+                                        "from": "noreply@hopeandhome.org",
+                                        "to": "@{replace(trim(string(item()?['Recipient'])), ' ', '')}",
+                                        "subject": "@item()?['MailSubject']",
+                                        "body": "@item()?['MessageEntry']",
+                                        "isHTML": "true",
+                                        "bcc": "@{if(or(empty(item()?['BCCRecipient']), equals(item()?['BCCRecipient'], '')), null, replace(trim(string(item()?['BCCRecipient'])), ' ', ''))}",
+                                        "importance": "Normal"
+                                    },
+                                    "serviceProviderConfiguration": {
+                                        "connectionName": "Smtp-2",
+                                        "operationId": "sendEmail",
+                                        "serviceProviderId": "/serviceProviders/Smtp"
+                                    },
+                                    "retryPolicy": {
+                                        "type": "exponential",
+                                        "interval": "PT30S",
+                                        "count": 4
+                                    }
+                                },
+                                "trackedProperties": {
+                                    "recipient": "@item()?['Recipient']",
+                                    "subject": "@item()?['MailSubject']"
+                                }
+                            },
+                            "Update_DB_being_notified": {
+                                "type": "ApiConnection",
+                                "runAfter": {
+                                    "Send_Notification_": [
+                                        "SUCCEEDED"
+                                    ]
+                                },
+                                "inputs": {
+                                    "host": {
+                                        "connection": {
+                                            "referenceName": "sqldw"
+                                        }
+                                    },
+                                    "method": "post",
+                                    "body": {
+                                        "Requisite_List": "@item()?['Requisites_Concat']"
+                                    },
+                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/procedures/@{encodeURIComponent(encodeURIComponent('[dbo].[MarkExpiringItems_Blz]'))}"
+                                }
+                            }
+                        }
+                    },
+                    "Catch_Send": {
+                        "type": "Scope",
+                        "runAfter": {
+                            "Try_Send": [
+                                "FAILED",
+                                "TIMEDOUT"
+                            ]
+                        },
+                        "actions": {
+                            "Log_Send_Failure": {
+                                "type": "Compose",
+                                "inputs": {
+                                    "recipient": "@item()?['Recipient']",
+                                    "subject": "@item()?['MailSubject']",
+                                    "statusCode": "@coalesce(actionOutputs('Send_Notification_')?['statusCode'], actions('Send_Notification_')?['Code'])",
+                                    "errorBody": "@string(actionOutputs('Send_Notification_'))"
+                                }
+                            },
+                            "Mark_HadFailures": {
+                                "type": "SetVariable",
+                                "inputs": {
+                                    "name": "HadFailures",
+                                    "value": true
+                                }
+                            }
+                        }
+                    }
+                },
+                "runAfter": {
+                    "Dump_SQL_Output": [
+                        "SUCCEEDED"
+                    ]
+                },
+                "runtimeConfiguration": {
+                    "concurrency": {
+                        "repetitions": 1
+                    }
+                }
+            },
+            "Dump_SQL_Output": {
+                "type": "Compose",
+                "inputs": "@body('Get_list_to_be_notified')",
+                "runAfter": {
+                    "Get_list_to_be_notified": [
+                        "SUCCEEDED"
+                    ]
+                }
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "Every_Other_Friday_17_pm": {
+                "type": "Recurrence",
+                "recurrence": {
+                    "interval": 2,
+                    "frequency": "Week",
+                    "timeZone": "Mountain Standard Time",
+                    "schedule": {
+                        "hours": [
+                            "17"
+                        ],
+                        "minutes": [
+                            0
+                        ],
+                        "weekDays": [
+                            "Friday"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "kind": "Stateful"
+}

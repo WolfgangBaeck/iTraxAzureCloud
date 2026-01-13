@@ -149,3 +149,9 @@ module "storage-sftp" {
   keyvault_id    = module.keyvault.keyvault_id
   random_s4      = random_string.random_s4.result
 }
+
+module "logicapp" {
+  source = "./logicapp"
+  resource_group = azurerm_resource_group.prod_rg
+  client_name = "${var.client_name}"
+}
