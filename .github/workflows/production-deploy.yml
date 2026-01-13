@@ -42,7 +42,7 @@ jobs:
     - name: Terraform Setup
       uses: hashicorp/setup-terraform@v2
       with:
-        terraform_version: 1.5.7
+        terraform_version: 1.14.3
 
     - name: Check AZ CLI
       run: |
