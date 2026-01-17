@@ -8,9 +8,14 @@
         "type": "ManagedServiceIdentity"
       },
       "connection": {
+<<<<<<< Updated upstream
         "id": "/subscriptions/c056d029-5e26-4859-b02c-35e4714819c7/resourceGroups/iTraxBlazerProd_RG/providers/Microsoft.Web/connections/sqldw"
       },
       "connectionRuntimeUrl": "https://9f2f73b596170988.09.common.logic-eastus2.azure-apihub.net/apim/sqldw/074bd96d536b4e0eb355916660d8d775"
+=======
+        "id": "/subscriptions/c056d029-5e26-4859-b02c-35e4714819c7/resourceGroups/iTraxBlazerProd_RG/providers/Microsoft.Web/connections/sqldw-hahlogicapp2"
+      }
+>>>>>>> Stashed changes
     }
   },
   "serviceProviderConnections": {

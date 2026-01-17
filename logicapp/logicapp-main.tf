@@ -88,8 +88,17 @@ data "azurerm_managed_api" "sqldw" {
 }
 
 resource "azurerm_api_connection" "sqldw" {
+<<<<<<< Updated upstream
   name                = "sqldw"
+<<<<<<< Updated upstream
   resource_group_name = var.resource_group.name
+=======
+  resource_group_name = var.resource_group.Name
+=======
+  name                = "sqldw-hahlogicapp2"
+  resource_group_name = var.resource_group.name
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   managed_api_id      = data.azurerm_managed_api.sqldw.id
 
   # MSI authentication for the connector (matches connections.json)

@@ -1,7 +1,6 @@
-
 name: 'iTrax production deploy'
 
-on: 
+on:
   push:
     branches:
       - 'production'
@@ -24,9 +23,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
     - name: Checkout Client
-      uses: actions/checkout@v3    
+      uses: actions/checkout@v3
 
     - name: Replace Secrets
       uses: cschleiden/replace-tokens@v1
@@ -44,28 +42,44 @@ jobs:
       with:
         terraform_version: 1.14.3
 
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.ARM_CLIENT_ID }}
+        tenant-id: ${{ secrets.ARM_TENANT_ID }}
+        subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
     - name: Check AZ CLI
       run: |
         az --version
-        
+
     - name: Check TF --version
       run: |
         terraform --version
 
-    # - name: show files
-    #   run: |
-    #     ls -la
-
-    # - name: show provider content
-    #   run: |
-    #     cat ./provider.tf
-
     - name: Terraform Init, Validate, Plan & Apply
       env:
         TF_VAR_client_id: "${{ secrets.ARM_CLIENT_ID }}"
-        TF_VAR_client_secret: "${{ secrets.ARM_CLIENT_SECRET }}"      
+        TF_VAR_client_secret: "${{ secrets.ARM_CLIENT_SECRET }}"
       run: |
         terraform init
         terraform validate -no-color
-        terraform plan -refresh=true -lock-timeout=5m -out=tfplan -no-color 
-        terraform apply -auto-approve  -lock-timeout=5m -no-color tfplan
+        terraform plan -refresh=true -lock-timeout=5m -out=tfplan -no-color
+        terraform apply -auto-approve -lock-timeout=5m -no-color tfplan
+
+    - name: Deploy Logic App workflow content (zip deploy)
+      run: |
+        set -euo pipefail
+
+        # sanity check
+        test -d logicapp_content
+
+        cd logicapp_content
+        zip -r ../logicapp_content.zip .
+        cd ..
+
+        az webapp deploy \
+          --resource-group "iTraxBlazerProd_RG" \
+          --name "hahlogicapp2" \
+          --src-path "logicapp_content.zip" \
+          --type zip
