@@ -88,7 +88,7 @@ data "azurerm_managed_api" "sqldw" {
 }
 
 resource "azurerm_api_connection" "sqldw" {
-  name                = "sqldw"
+  name                = "sqldw-hahlogicapp2"
   resource_group_name = var.resource_group.name
   managed_api_id      = data.azurerm_managed_api.sqldw.id
 
