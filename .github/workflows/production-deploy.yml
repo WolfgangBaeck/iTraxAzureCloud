@@ -42,12 +42,10 @@ jobs:
       with:
         terraform_version: 1.14.3
 
-    - name: Azure Login
+    - name: Azure login (SP via creds)
       uses: azure/login@v2
       with:
-        client-id: ${{ secrets.ARM_CLIENT_ID }}
-        tenant-id: ${{ secrets.ARM_TENANT_ID }}
-        subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Check AZ CLI
       run: |
