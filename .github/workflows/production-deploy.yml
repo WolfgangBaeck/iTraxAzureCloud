@@ -69,8 +69,10 @@ jobs:
       run: |
         set -euo pipefail
 
-        # sanity check
         test -d logicapp_content
+
+        echo "Files in logicapp_content:"
+        find logicapp_content -maxdepth 3 -type f -print
 
         cd logicapp_content
         zip -r ../logicapp_content.zip .
@@ -78,6 +80,9 @@ jobs:
 
         echo "Zip contents:"
         unzip -l logicapp_content.zip | head -n 200
+
+        echo "Target webapp:"
+        az webapp show -g "iTraxBlazerProd_RG" -n "hah-logicapp" --query "{name:name,state:state,host:defaultHostName}" -o json
 
         az webapp deploy \
           --resource-group "iTraxBlazerProd_RG" \
