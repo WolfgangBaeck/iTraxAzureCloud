@@ -65,6 +65,7 @@ resource "azurerm_logic_app_standard" "hahlogicapp" {
     "Smtp_12_serverAddress"  = "smtp.mailgun.org"
     "Smtp_12_username"       = "REDACT_ME"
     "Smtp_12_password"       = "REDACT_ME"
+    "AzureFunctionsJobHost__extensionBundle__version" = "1.117.31"
 
     # Good practice: ensure the runtime has a package deployment mode you like.
     # "WEBSITE_RUN_FROM_PACKAGE" = "1"   # (optional; if you deploy zip as package)
