@@ -88,5 +88,5 @@ jobs:
           --resource-group "iTraxBlazerProd_RG" \
           --name "hah-logicapp" \
           --src-path "logicapp_content.zip" \
-          --type zip
+          --type zip \
           --verbose
