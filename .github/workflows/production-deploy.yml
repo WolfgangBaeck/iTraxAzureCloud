@@ -72,21 +72,25 @@ jobs:
         test -d logicapp_content
 
         echo "Files in logicapp_content:"
-        find logicapp_content -maxdepth 3 -type f -print
+        find logicapp_content -maxdepth 5 -type f -print || true
 
         cd logicapp_content
         zip -r ../logicapp_content.zip .
         cd ..
 
         echo "Zip contents:"
-        unzip -l logicapp_content.zip | head -n 200
+        unzip -l logicapp_content.zip | head -n 200 || true
 
         echo "Target webapp:"
         az webapp show -g "iTraxBlazerProd_RG" -n "hah-logicapp" --query "{name:name,state:state,host:defaultHostName}" -o json
 
+        echo "Deploying..."
         az webapp deploy \
           --resource-group "iTraxBlazerProd_RG" \
           --name "hah-logicapp" \
           --src-path "logicapp_content.zip" \
           --type zip \
-          --verbose
+          --verbose 2>&1 | tee deploy.log
+
+        echo "Deploy log tail:"
+        tail -n 200 deploy.log
