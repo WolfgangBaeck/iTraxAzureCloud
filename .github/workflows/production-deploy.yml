@@ -67,7 +67,7 @@ jobs:
 
     - name: Deploy Logic App workflow content (zip deploy)
       run: |
-        set -euo pipefail
+        set -euxo pipefail
 
         test -d logicapp_content
 
@@ -82,7 +82,7 @@ jobs:
         unzip -l logicapp_content.zip | head -n 200 || true
 
         echo "Target webapp:"
-        az webapp show -g "iTraxBlazerProd_RG" -n "hah-logicapp" --query "{name:name,state:state,host:defaultHostName}" -o json
+        az webapp show -g "iTraxBlazerProd_RG" -n "hah-logicapp" -o json
 
         echo "Deploying..."
         az webapp deploy \
