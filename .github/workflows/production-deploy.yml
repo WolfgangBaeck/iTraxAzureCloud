@@ -69,12 +69,12 @@ jobs:
       run: |
         set -euxo pipefail
 
-        test -d logicapp_content
+        test -d logicapp/logicapp_content
 
         echo "Files in logicapp_content:"
         find logicapp_content -maxdepth 5 -type f -print || true
 
-        cd logicapp_content
+        cd logicapp/logicapp_content
         zip -r ../logicapp_content.zip .
         cd ..
 
