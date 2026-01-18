@@ -8,7 +8,7 @@
         "type": "ManagedServiceIdentity"
       },
       "connection": {
-        "id": "/subscriptions/c056d029-5e26-4859-b02c-35e4714819c7/resourceGroups/iTraxBlazerProd_RG/providers/Microsoft.Web/connections/sqldw-hahlogicapp2"
+        "id": "/subscriptions/c056d029-5e26-4859-b02c-35e4714819c7/resourceGroups/iTraxBlazerProd_RG/providers/Microsoft.Web/connections/sqldw"
       }
     }
   },

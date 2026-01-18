@@ -88,23 +88,23 @@ data "azurerm_managed_api" "sqldw" {
   location = var.resource_group.location
 }
 
-resource "azurerm_api_connection" "sqldw" {
-  name                = "sqldw-hahlogicapp2"
-  resource_group_name = var.resource_group.name
-  managed_api_id      = data.azurerm_managed_api.sqldw.id
+# resource "azurerm_api_connection" "sqldw" {
+#   name                = "sqldw-hahlogicapp2"
+#   resource_group_name = var.resource_group.name
+#   managed_api_id      = data.azurerm_managed_api.sqldw.id
 
-  # MSI authentication for the connector (matches connections.json)
-  parameter_values = {
-    "authenticationType" = "ManagedServiceIdentity"
-  }
-}
+#   # MSI authentication for the connector (matches connections.json)
+#   parameter_values = {
+#     "authenticationType" = "ManagedServiceIdentity"
+#   }
+# }
 
 # If you want the Logic App identity to be able to USE the API connection,
 # you typically need to grant it permissions to the API connection resource.
 # Many setups work without explicit RBAC here, but if you hit auth issues,
 # add a role assignment like this:
-resource "azurerm_role_assignment" "logicapp_can_read_api_connection" {
-  scope                = azurerm_api_connection.sqldw.id
-  role_definition_name = "Reader"
-  principal_id         = azurerm_logic_app_standard.hahlogicapp.identity[0].principal_id
-}
+# resource "azurerm_role_assignment" "logicapp_can_read_api_connection" {
+#   scope                = azurerm_api_connection.sqldw.id
+#   role_definition_name = "Reader"
+#   principal_id         = azurerm_logic_app_standard.hahlogicapp.identity[0].principal_id
+# }
